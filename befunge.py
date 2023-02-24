@@ -24,7 +24,7 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
 
     # Commands
 
-    if not string_mode or cmd == "\"":
+    if (not string_mode or cmd == "\""):
 
         match cmd:
             
@@ -62,7 +62,8 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
                 stack.append(stack.pop() % stack.pop())
             
             case "!":
-                if (stack.pop() == 0):
+                value = stack.pop()
+                if (value == 0 or value == None):
                     stack.append(1)
                 else:
                     stack.append(0)
@@ -76,37 +77,42 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
             case "?":
                 rand_direction = random.randint(1, 4)
 
-                if rand_direction == 1:
+                if (rand_direction) == 1:
                     direction = "right"
-                elif rand_direction == 2:
+                elif (rand_direction) == 2:
                     direction = "left"
-                elif rand_direction == 3:
+                elif (rand_direction) == 3:
                     direction = "up"
-                elif rand_direction == 4:
+                elif (rand_direction) == 4:
                     direction = "down"
             
             case "_":
-                if (stack.pop() == 0):
+                value = stack.pop()
+                if (value == 0 or value == None):
                     direction = "right"
                 else:
                     direction = "left"
             
             case "|":
-                if (stack.pop() == 0):
+                value = stack.pop()
+                if (value == 0 or value == None):
                     direction = "down"
                 else:
                     direction = "up"
             
             case "\"":
-                if string_mode:
+                if (string_mode):
                     string_mode = False
                 else:
                     string_mode = True
             
             case ":":
-                value = stack.pop()
-                stack.append(value)
-                stack.append(value)
+                try:
+                    value = stack.pop()
+                    stack.append(value)
+                    stack.append(value)
+                except IndexError:
+                    stack.append(0)
             
             case "\\":
                 value1 = stack.pop()
@@ -163,37 +169,37 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
         stack.append(ord(cmd))
     
     # End
-    if end:
+    if (end):
         return stack
     
     # Right
-    if direction == "right":
+    if (direction == "right"):
 
-        if skip:
+        if (skip):
             return run(code, input, row, column+2, direction, string_mode, stack)
         
         return run(code, input, row, column+1, direction, string_mode, stack)
     
     # Left
-    elif direction == "left":
+    elif (direction == "left"):
 
-        if skip:
+        if (skip):
             return run(code, input, row, column-2, direction, string_mode, stack)
         
         return run(code, input, row, column-1, direction, string_mode, stack)
     
     # Down
-    elif direction == "down":
+    elif (direction == "down"):
 
-        if skip:
+        if (skip):
             return run(code, input, row+2, column, direction, string_mode, stack)
         
         return run(code, input, row+1, column, direction, string_mode, stack)
     
     # Up
-    elif direction == "up":
+    elif (direction == "up"):
 
-        if skip:
+        if (skip):
             return run(code, input, row-2, column, direction, string_mode, stack)
         
         return run(code, input, row-1, column, direction, string_mode, stack)
