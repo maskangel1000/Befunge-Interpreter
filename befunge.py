@@ -3,14 +3,15 @@ import random
 """
 Runs the befunge code
 
-code: list - The code list to run. Should be a list of strings, each string being a row.
-input: list - The input given to the code.
-
+code: list - The code list to run. Should be a list of strings, each string being a row
+input: list - The input given to the code
 row: int - The starting row
 column: int - The starting column
 direction: str - The starting direction
 string_mode: boolean - Start in string mode
 stack: list - The starting stack
+
+Returns the stack at end of program
 """
 def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="right", string_mode: bool=False, stack: list=[]):
 
