@@ -13,7 +13,10 @@ stack: list - The starting stack
 
 Returns the stack at end of program
 """
-def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="right", string_mode: bool=False, stack: list=[]):
+def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="right", string_mode: bool=False, stack: list=[], recursive: bool=False):
+
+    if not recursive:
+        stack = []
 
     end = False
     skip = False
@@ -55,7 +58,9 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
             
             case "-":
                 if len(stack) >= 2:
-                    stack.append(stack.pop() - stack.pop())
+                    value1 = stack.pop()
+                    value2 = stack.pop()
+                    stack.append(value2 - value1)
                 else:
                     pass
             
@@ -67,13 +72,17 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
             
             case "/":
                 if len(stack) >= 2:
-                    stack.append(stack.pop() / stack.pop())
+                    value1 = stack.pop()
+                    value2 = stack.pop()
+                    stack.append(value2 // value1)
                 else:
                     pass
             
             case "%":
                 if len(stack) >= 2:
-                    stack.append(stack.pop() % stack.pop())
+                    value1 = stack.pop()
+                    value2 = stack.pop()
+                    stack.append(value2 % value1)
                 else:
                     pass
             
@@ -177,7 +186,7 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
             
             case "~":
                 try:
-                    stack.append(ord(input.pop(0)))
+                    stack.append(ord(str(input.pop(0))))
                 except IndexError:
                     raise RuntimeError("Unexpected end of input")
             
@@ -203,7 +212,7 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
                     y = stack.pop()
                     x = stack.pop()
 
-                    stack.append(code[y][x])
+                    stack.append(ord(code[y][x]))
                 else:
                     pass
             
@@ -228,40 +237,30 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
     if direction == "right":
 
         if skip:
-            return run(code, input, row, column+2, direction, string_mode, stack)
+            return run(code, input, row, column+2, direction, string_mode, stack, True)
         
-        return run(code, input, row, column+1, direction, string_mode, stack)
+        return run(code, input, row, column+1, direction, string_mode, stack, True)
     
     # Left
     elif direction == "left":
 
         if skip:
-            return run(code, input, row, column-2, direction, string_mode, stack)
+            return run(code, input, row, column-2, direction, string_mode, stack, True)
         
-        return run(code, input, row, column-1, direction, string_mode, stack)
+        return run(code, input, row, column-1, direction, string_mode, stack, True)
     
     # Down
     elif direction == "down":
 
         if skip:
-            return run(code, input, row+2, column, direction, string_mode, stack)
+            return run(code, input, row+2, column, direction, string_mode, stack, True)
         
-        return run(code, input, row+1, column, direction, string_mode, stack)
+        return run(code, input, row+1, column, direction, string_mode, stack, True)
     
     # Up
     elif direction == "up":
 
         if skip:
-            return run(code, input, row-2, column, direction, string_mode, stack)
+            return run(code, input, row-2, column, direction, string_mode, stack, True)
         
-        return run(code, input, row-1, column, direction, string_mode, stack)
-
-code = [
-    "v ",
-    " @",
-    "4.",
-    "2/",
-    ">^"
-]
-
-run(code)
+        return run(code, input, row-1, column, direction, string_mode, stack, True)
