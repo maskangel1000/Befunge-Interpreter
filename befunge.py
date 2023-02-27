@@ -156,6 +156,12 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
                 
                 code[y] = code_str
             
+            case "g":
+                y = stack.pop()
+                x = stack.pop()
+
+                stack.append(code[y][x])
+            
             case " ":
                 pass
             
