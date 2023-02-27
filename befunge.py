@@ -48,30 +48,51 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
                 skip=True
             
             case "+":
-                stack.append(stack.pop() + stack.pop())
+                if len(stack) >= 2:
+                    stack.append(stack.pop() + stack.pop())
+                else:
+                    pass
             
             case "-":
-                stack.append(stack.pop() - stack.pop())
+                if len(stack) >= 2:
+                    stack.append(stack.pop() - stack.pop())
+                else:
+                    pass
             
             case "*":
-                stack.append(stack.pop() * stack.pop())
+                if len(stack) >= 2:
+                    stack.append(stack.pop() * stack.pop())
+                else:
+                    pass
             
             case "/":
-                stack.append(stack.pop() // stack.pop())
+                if len(stack) >= 2:
+                    stack.append(stack.pop() / stack.pop())
+                else:
+                    pass
             
             case "%":
-                stack.append(stack.pop() % stack.pop())
+                if len(stack) >= 2:
+                    stack.append(stack.pop() % stack.pop())
+                else:
+                    pass
             
             case "!":
-                value = stack.pop()
-                if value == 0 or value == None:
+                try:
+                    value = stack.pop()
+                    if value == 0 or value == None:
+                        stack.append(1)
+                    else:
+                        stack.append(0)
+                except IndexError:
                     stack.append(1)
-                else:
-                    stack.append(0)
             
             case "`":
-                if stack.pop() <= stack.pop():
-                    stack.append(1)
+                if len(stack) >= 2:
+                    if stack.pop() <= stack.pop():
+                        stack.append(1)
+                    else:
+                        stack.append(0)
                 else:
                     stack.append(0)
             
@@ -88,18 +109,24 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
                     direction = "down"
             
             case "_":
-                value = stack.pop()
-                if value == 0 or value == None:
+                try:
+                    value = stack.pop()
+                    if value == 0 or value == None:
+                        direction = "right"
+                    else:
+                        direction = "left"
+                except IndexError:
                     direction = "right"
-                else:
-                    direction = "left"
             
             case "|":
-                value = stack.pop()
-                if value == 0 or value == None:
+                try:
+                    value = stack.pop()
+                    if value == 0 or value == None:
+                        direction = "down"
+                    else:
+                        direction = "up"
+                except IndexError:
                     direction = "down"
-                else:
-                    direction = "up"
             
             case "\"":
                 if string_mode:
@@ -116,19 +143,31 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
                     stack.append(0)
             
             case "\\":
-                value1 = stack.pop()
-                value2 = stack.pop()
-                stack.append(value1)
-                stack.append(value2)
+                if len(stack) >= 2:
+                    value1 = stack.pop()
+                    value2 = stack.pop()
+                    stack.append(value1)
+                    stack.append(value2)
+                else:
+                    pass
             
             case "$":
-                stack.pop()
+                try:
+                    stack.pop()
+                except IndexError:
+                    pass
             
             case ".":
-                print(stack.pop(), end=" ")
+                try:
+                    print(stack.pop(), end=" ")
+                except IndexError:
+                    pass
             
             case ",":
-                print(chr(stack.pop()), end="")
+                try:
+                    print(chr(stack.pop()), end="")
+                except IndexError:
+                    pass
 
             case "&":
                 try:
@@ -143,24 +182,30 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
                     raise RuntimeError("Unexpected end of input")
             
             case "p":
-                y = stack.pop()
-                x = stack.pop()
-                value = stack.pop()
+                if len(stack) >= 3:
+                    y = stack.pop()
+                    x = stack.pop()
+                    value = stack.pop()
 
-                code_list = list(code[y])
-                code_list[x] = chr(value)
+                    code_list = list(code[y])
+                    code_list[x] = chr(value)
 
-                code_str = ""
-                for i in code_list:
-                    code_str += str(i)
-                
-                code[y] = code_str
+                    code_str = ""
+                    for i in code_list:
+                        code_str += str(i)
+                    
+                    code[y] = code_str
+                else:
+                    pass
             
             case "g":
-                y = stack.pop()
-                x = stack.pop()
+                if len(stack) >= 2:
+                    y = stack.pop()
+                    x = stack.pop()
 
-                stack.append(code[y][x])
+                    stack.append(code[y][x])
+                else:
+                    pass
             
             case " ":
                 pass
@@ -210,3 +255,13 @@ def run(code: list, input: list=[], row: int=0, column: int=0, direction: str="r
             return run(code, input, row-2, column, direction, string_mode, stack)
         
         return run(code, input, row-1, column, direction, string_mode, stack)
+
+code = [
+    "v ",
+    " @",
+    "4.",
+    "2/",
+    ">^"
+]
+
+run(code)
